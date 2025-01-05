@@ -65,6 +65,13 @@ public class RestaurantOrders {
                 .toList();
     }
 
+    public List<Order> getHomeDeliveryOrders() {
+        return orders.stream()
+                .filter(Order::isHomeDelivery)
+                .toList();
+    }
+
+
 
     // Наполните этот класс решением домашнего задания.
     // Вам необходимо создать все необходимые методы
