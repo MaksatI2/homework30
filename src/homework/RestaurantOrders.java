@@ -84,6 +84,14 @@ public class RestaurantOrders {
                 .toList();
     }
 
+    public Order getLeastProfitableHomeDeliveryOrder() {
+        return orders.stream()
+                .filter(Order::isHomeDelivery)
+                .min(Comparator.comparingDouble(Order::getTotal))
+                .orElse(null);
+    }
+
+
 
     // Наполните этот класс решением домашнего задания.
     // Вам необходимо создать все необходимые методы
