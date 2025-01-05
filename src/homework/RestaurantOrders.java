@@ -71,6 +71,14 @@ public class RestaurantOrders {
                 .toList();
     }
 
+    public Order getMostProfitableHomeDeliveryOrder() {
+        return orders.stream()
+                .filter(Order::isHomeDelivery)
+                .max(Comparator.comparingDouble(Order::getTotal))
+                .orElse(null);
+    }
+
+
 
 
     // Наполните этот класс решением домашнего задания.
