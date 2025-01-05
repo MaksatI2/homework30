@@ -50,6 +50,13 @@ public class RestaurantOrders {
         });
     }
 
+    public List<Order> getTopOrdersByTotal(int n) {
+        return orders.stream()
+                .sorted((o1, o2) -> Double.compare(o2.getTotal(), o1.getTotal()))
+                .limit(n)
+                .toList();
+    }
+
 
     // Наполните этот класс решением домашнего задания.
     // Вам необходимо создать все необходимые методы
