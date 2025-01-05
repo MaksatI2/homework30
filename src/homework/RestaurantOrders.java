@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.List;
 
 public class RestaurantOrders {
@@ -53,6 +54,13 @@ public class RestaurantOrders {
     public List<Order> getTopOrdersByTotal(int n) {
         return orders.stream()
                 .sorted((o1, o2) -> Double.compare(o2.getTotal(), o1.getTotal()))
+                .limit(n)
+                .toList();
+    }
+
+    public List<Order> getBottomOrdersByTotal(int n) {
+        return orders.stream()
+                .sorted(Comparator.comparingDouble(Order::getTotal))
                 .limit(n)
                 .toList();
     }
