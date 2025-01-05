@@ -91,6 +91,13 @@ public class RestaurantOrders {
                 .orElse(null);
     }
 
+    public double calculateTotalSum() {
+        return orders.stream()
+                .mapToDouble(Order::getTotal)
+                .sum();
+    }
+
+
 
 
     // Наполните этот класс решением домашнего задания.
