@@ -109,7 +109,6 @@ public class RestaurantOrders {
         for (int i = 0; i < emailList.size(); i++) {
             for (int j = 0; j < emailList.size() - i - 1; j++) {
                 if (emailList.get(j).compareTo(emailList.get(j + 1)) > 0) {
-                    // Обмен местами
                     String temp = emailList.get(j);
                     emailList.set(j, emailList.get(j + 1));
                     emailList.set(j + 1, temp);
@@ -120,11 +119,4 @@ public class RestaurantOrders {
         return emailList;
     }
 
-
-
-    // Наполните этот класс решением домашнего задания.
-    // Вам необходимо создать все необходимые методы
-    // для решения заданий из домашки :)
-    // вы можете добавлять все необходимые imports
-    //
 }
