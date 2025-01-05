@@ -6,8 +6,11 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RestaurantOrders {
     // Этот блок кода менять нельзя! НАЧАЛО!
@@ -97,6 +100,25 @@ public class RestaurantOrders {
                 .sum();
     }
 
+    public List<String> getSortedUniqueEmails() {
+        Set<String> uniqueEmails = orders.stream()
+                .map(order -> order.getCustomer().getEmail())
+                .collect(Collectors.toSet());
+
+        List<String> emailList = new ArrayList<>(uniqueEmails);
+        for (int i = 0; i < emailList.size(); i++) {
+            for (int j = 0; j < emailList.size() - i - 1; j++) {
+                if (emailList.get(j).compareTo(emailList.get(j + 1)) > 0) {
+                    // Обмен местами
+                    String temp = emailList.get(j);
+                    emailList.set(j, emailList.get(j + 1));
+                    emailList.set(j + 1, temp);
+                }
+            }
+        }
+
+        return emailList;
+    }
 
 
 
