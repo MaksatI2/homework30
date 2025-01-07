@@ -1,15 +1,13 @@
 package homework;
 
+import homework.domain.Item;
 import homework.domain.Order;
 
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RestaurantOrders {
@@ -56,7 +54,7 @@ public class RestaurantOrders {
 
     public List<Order> getTopOrdersByTotal(int n) {
         return orders.stream()
-                .sorted((o1, o2) -> Double.compare(o2.getTotal(), o1.getTotal()))
+                .sorted(Comparator.comparingDouble(Order::getTotal).reversed())
                 .limit(n)
                 .toList();
     }
@@ -117,6 +115,46 @@ public class RestaurantOrders {
         }
 
         return emailList;
+    }
+
+    public Map<String, List<Order>> getOrdersGroupedByCustomerName() {
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getCustomer().getFullName()));
+    }
+
+    public Map<String, Double> getUniqueCustomersWithTotalOrderSum() {
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getCustomer().getFullName(),
+                        Collectors.summingDouble(Order::getTotal)));
+    }
+
+    public String getCustomerWithMaxOrderSum() {
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getCustomer().getFullName(),
+                        Collectors.summingDouble(Order::getTotal)))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    public String getCustomerWithMinOrderSum() {
+        return orders.stream()
+                .collect(Collectors.groupingBy(order -> order.getCustomer().getFullName(),
+                        Collectors.summingDouble(Order::getTotal)))
+                .entrySet()
+                .stream()
+                .min(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    public Map<String, Integer> getItemsGroupedByTotalAmount() {
+        return orders.stream()
+                .flatMap(order -> order.getItems().stream())
+                .collect(Collectors.groupingBy(Item::getName,
+                        Collectors.summingInt(Item::getAmount)));
     }
 
 }
