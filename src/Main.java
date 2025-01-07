@@ -41,13 +41,15 @@ public class Main {
         printGroupedByCustomer(orders.getOrdersGroupedByCustomerName());
 
         System.out.println("\nСумма заказов по каждому клиенту:");
-        printCustomerSums(orders.getUniqueCustomersWithTotalOrderSum());
+        Map<String, Double> customerSums = orders.getUniqueCustomersWithTotalOrderSum();
+        printUniqueCustomersWithTotalOrderSumInColumns(customerSums);
 
         System.out.println("\nКлиент с максимальной суммой заказов: " + orders.getCustomerWithMaxOrderSum());
         System.out.println("Клиент с минимальной суммой заказов: " + orders.getCustomerWithMinOrderSum());
 
         System.out.println("\nТовары, сгруппированные по общему количеству:");
-        printItemsGroupedByAmount(orders.getItemsGroupedByTotalAmount());
+        Map<String, Integer> itemCounts = orders.getItemsGroupedByTotalAmount();
+        printItemsGroupedByTotalAmountInThreeColumns(itemCounts);
     }
 
     private static void printTopOrders(List<Order> orders) {
@@ -120,6 +122,35 @@ public class Main {
         }
     }
 
+    private static void printUniqueCustomersWithTotalOrderSumInColumns(Map<String, Double> customerSums) {
+        if (customerSums.isEmpty()) {
+            System.out.println("Нет данных для отображения.");
+            return;
+        }
+
+        List<String> formattedEntries = customerSums.entrySet().stream()
+                .map(entry -> entry.getKey() + " (" + String.format("%.2f", entry.getValue()) + ")")
+                .toList();
+
+        int columnCount = 2;
+        int rowCount = (formattedEntries.size() + columnCount - 1) / columnCount;
+
+        for (int i = 0; i < rowCount; i++) {
+            StringBuilder row = new StringBuilder();
+
+            for (int j = 0; j < columnCount; j++) {
+                int index = i + j * rowCount;
+                if (index < formattedEntries.size()) {
+                    String entry = formattedEntries.get(index);
+                    row.append(String.format("%-40s", entry));
+                }
+            }
+
+            System.out.println(row.toString());
+        }
+    }
+
+
     private static void printHomeDeliveryOrders(List<Order> orders) {
         if (orders.isEmpty()) {
             System.out.println("Нет заказов с доставкой.");
@@ -138,24 +169,6 @@ public class Main {
         }
     }
 
-    private static void printOrdersByTotalRange(List<Order> orders) {
-        if (orders.isEmpty()) {
-            System.out.println("Нет заказов в указанном диапазоне.");
-        } else {
-            orders.forEach(order -> {
-                System.out.println(order.getCustomer().getFullName() + " - Total: " + order.getTotal());
-            });
-        }
-    }
-
-    private static void printSortedEmails(List<String> emails) {
-        if (emails.isEmpty()) {
-            System.out.println("Нет email адресов.");
-        } else {
-            emails.forEach(email -> System.out.println(email));
-        }
-    }
-
     private static void printGroupedByCustomer(Map<String, List<Order>> groupedOrders) {
         groupedOrders.forEach((customer, orders) -> {
             System.out.println(customer + ": ");
@@ -163,16 +176,32 @@ public class Main {
         });
     }
 
-    private static void printCustomerSums(Map<String, Double> customerSums) {
-        customerSums.forEach((customer, sum) -> {
-            System.out.println(customer + ": " + sum);
-        });
-    }
+    private static void printItemsGroupedByTotalAmountInThreeColumns(Map<String, Integer> itemCounts) {
+        if (itemCounts.isEmpty()) {
+            System.out.println("Нет данных для отображения.");
+            return;
+        }
 
-    private static void printItemsGroupedByAmount(Map<String, Integer> itemsGrouped) {
-        itemsGrouped.forEach((item, amount) -> {
-            System.out.println(item + ": " + amount);
-        });
+        List<String> formattedEntries = itemCounts.entrySet().stream()
+                .map(entry -> entry.getKey() + " - " + entry.getValue())
+                .toList();
+
+        int columnCount = 3;
+        int rowCount = (formattedEntries.size() + columnCount - 1) / columnCount;
+
+        for (int i = 0; i < rowCount; i++) {
+            StringBuilder row = new StringBuilder();
+
+            for (int j = 0; j < columnCount; j++) {
+                int index = i + j * rowCount;
+                if (index < formattedEntries.size()) {
+                    String entry = formattedEntries.get(index);
+                    row.append(String.format("%-30s", entry));
+                }
+            }
+
+            System.out.println(row.toString());
+        }
     }
 }
 
