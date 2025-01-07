@@ -28,12 +28,14 @@ public class Main {
 
         System.out.println("\nЗаказы в пределах суммы от 50 до 200:");
         List<Order> filteredOrders = orders.getOrdersByTotalRange(50.0, 100.0);
-        printOrdersInTwoColumns(filteredOrders);
+        printOrdersInColumns(filteredOrders);
 
         System.out.println("\nСумма всех заказов: " + orders.calculateTotalSum());
 
         System.out.println("\nУникальные и отсортированные email адреса клиентов:");
-        printSortedEmails(orders.getSortedUniqueEmails());
+        List<String> sortedUniqueEmails = orders.getSortedUniqueEmails();
+        printSortedUniqueEmailsInColumns(sortedUniqueEmails);
+
 
         System.out.println("\nЗаказы, сгруппированные по клиентам:");
         printGroupedByCustomer(orders.getOrdersGroupedByCustomerName());
@@ -58,7 +60,7 @@ public class Main {
         }
     }
 
-    private static void printOrdersInTwoColumns(List<Order> orders) {
+    private static void printOrdersInColumns(List<Order> orders) {
         if (orders.isEmpty()) {
             System.out.println("Нет заказов в указанном диапазоне.");
             return;
@@ -76,6 +78,30 @@ public class Main {
                     Order order = orders.get(index);
                     row.append(String.format("%-30s",
                             order.getCustomer().getFullName() + " (" + String.format("%.2f", order.getTotal()) + ")"));
+                }
+            }
+
+            System.out.println(row.toString());
+        }
+    }
+
+    private static void printSortedUniqueEmailsInColumns(List<String> emails) {
+        if (emails.isEmpty()) {
+            System.out.println("Нет email-адресов для отображения.");
+            return;
+        }
+
+        int columnCount = 3;
+        int rowCount = (emails.size() + columnCount - 1) / columnCount;
+
+        for (int i = 0; i < rowCount; i++) {
+            StringBuilder row = new StringBuilder();
+
+            for (int j = 0; j < columnCount; j++) {
+                int index = i + j * rowCount;
+                if (index < emails.size()) {
+                    String email = emails.get(index);
+                    row.append(String.format("%-40s", email));
                 }
             }
 
